@@ -54,8 +54,8 @@ ${br}
 - [${dog.mitMenschen.freundlich ? 'x' : ' '}] freundlich${br}
 kommt: ${dog.mitMenschen.kommt || '-'}${br}
 Anfassbarkeit: ${dog.mitMenschen.anfassbarkeit || '-'}${br}
-- [${dog.mitMenschen.laesstSichEinschraenken ? 'x' : ' '}] freundlich${br}
-- [${dog.mitMenschen.laesstSichFesthalten ? 'x' : ' '}] freundlich${br}
+- [${dog.mitMenschen.laesstSichEinschraenken ? 'x' : ' '}] lässt sich einschränken${br}
+- [${dog.mitMenschen.laesstSichFesthalten ? 'x' : ' '}] lässt sich festhalten${br}
 ${br}
 **Anmerkungen**${br}
 ${dog.anmerkungen || 'keine'}${br}
