@@ -182,6 +182,7 @@ export class DogEditor implements OnInit {
   }
 
   deselectDog() {
+    this.saveDog();
     this.selectedDog.set(-1);
   }
 
