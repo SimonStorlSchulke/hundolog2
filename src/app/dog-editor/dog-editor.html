@@ -1,10 +1,7 @@
 <div class="layout">
   <div class="list">
     <form class="topbar">
-      <button (click)="newDog()" matFab extended>
-        <mat-icon>add</mat-icon>
-        neuer Hund
-      </button>
+
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>suchen</mat-label>
         <input (input)="search($event)" type="text" matInput [formControl]="searchFormControl">
@@ -24,6 +21,11 @@
         </div>
       }
     </div>
+
+    <button class="new-dog" (click)="newDog()" matFab extended>
+      <mat-icon>add</mat-icon>
+      neuer Hund
+    </button>
   </div>
 
   @if(selectedDog() != -1) {

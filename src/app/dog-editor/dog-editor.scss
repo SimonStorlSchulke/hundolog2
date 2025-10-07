@@ -159,15 +159,21 @@ mat-card-title {
   mat-form-field {
     flex-grow: 1;
   }
+}
 
-  button {
-    box-shadow: none;
-    border-radius: 0;
-  }
+.new-dog {
+  box-shadow: none;
+  border-radius: 0;
 }
 
 @media (max-width: 800px) {
   .topbar {
     width: 100dvw;
+  }
+
+  .new-dog {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
   }
 }
