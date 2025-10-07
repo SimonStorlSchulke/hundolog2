@@ -53,6 +53,7 @@ export class DogEditor implements OnInit {
   dogs = signal<Dog[]>([]);
   selectedDog = signal<number>(-1);
   searchText = signal('');
+  askedRemoveDog = signal(false);
 
   shownDogs = computed(() => {
     return this.dogs().filter(dog => {
@@ -172,6 +173,7 @@ export class DogEditor implements OnInit {
     this.dogs.update(dogs => dogs.filter((_, i) => i !== index));
     this.selectedDog.set(-1);
     this.saveToLocalStorage();
+    this.askedRemoveDog.set(false);
   }
 
   saveToLocalStorage() {
