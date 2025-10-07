@@ -1,0 +1,151 @@
+<div class="layout">
+  <div class="list">
+    <form class="topbar">
+      <button (click)="newDog()" matFab extended>
+        <mat-icon>add</mat-icon>
+        neuer Hund
+      </button>
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>suchen</mat-label>
+        <input (input)="search($event)" type="text" matInput [formControl]="searchFormControl">
+      </mat-form-field>
+
+    </form>
+
+    <div class="list-entries">
+      @for(dog of dogs(); track $index) {
+        <div class="list-entry" [class.hidden]="!shownDogs().includes(dog)" [class.selected]="selectedDog() == $index" (click)="selectDog($index)">
+          <span>{{dog.name || 'neuer Hund'}}</span>
+          @if(dog.completeness < 100) {
+            <mat-progress-bar mode="determinate" [value]="dog.completeness ?? 0"></mat-progress-bar>
+          } @else {
+            <mat-icon class="checkmark">check</mat-icon>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  @if(selectedDog() != -1) {
+
+
+  <form [formGroup]="dogForm" (ngSubmit)="saveDog()" class="editor">
+    <div class="back-button-wrapper">
+      <button (click)="deselectDog()" matFab extended>
+        <mat-icon>arrow_back</mat-icon>
+        zurück
+      </button>
+    </div>
+
+    <mat-card>
+      <mat-card-title>🐶 Allgemeines - {{dogs()[selectedDog()].name}}</mat-card-title>
+      <mat-card-content>
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gesundheit -->
+    <mat-card>
+      <mat-card-title>❤️ Gesundheit</mat-card-title>
+      <mat-card-content>
+        <div formGroupName="gesundheit" class="section">
+
+          <div class="field-group">
+            <label>Bewegung:</label>
+            <mat-button-toggle-group formControlName="bewegung">
+              <mat-button-toggle *ngFor="let opt of bewegungOptions" [value]="opt">{{ opt }}</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div class="field-group">
+            <label>Gewicht:</label>
+            <mat-button-toggle-group formControlName="gewicht">
+              <mat-button-toggle *ngFor="let opt of gewichtOptions" [value]="opt">{{ opt }}</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div class="field-group">
+            <label>Verhalten:</label>
+            <mat-button-toggle-group formControlName="verhalten">
+              <mat-button-toggle *ngFor="let opt of verhaltenOptions" [value]="opt">{{ opt }}</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+  <!--
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Freitext</mat-label>
+            <textarea matInput formControlName="freitext" rows="2"></textarea>
+          </mat-form-field>
+  -->
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Mit Hunden -->
+    <mat-card>
+      <mat-card-title>🐕 Mit Hunden</mat-card-title>
+      <mat-card-content>
+        <div formGroupName="mitHunden" class="checkbox-group">
+          <mat-checkbox formControlName="spielt">spielt</mat-checkbox>
+          <mat-checkbox formControlName="streitet">streitet sich oft</mat-checkbox>
+          <mat-checkbox formControlName="verwaltetRessourcen">verwaltet Ressourcen</mat-checkbox>
+          <mat-checkbox formControlName="mobbtAndere">mobbt andere</mat-checkbox>
+          <mat-checkbox formControlName="verkriechtSich">verkriecht sich</mat-checkbox>
+          <mat-checkbox formControlName="wirdBegruesst">wird begrüßt</mat-checkbox>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Mit Menschen -->
+    <mat-card>
+      <mat-card-title>👩‍🦰 Mit Menschen</mat-card-title>
+      <mat-card-content>
+        <div formGroupName="mitMenschen" class="section">
+          <mat-checkbox formControlName="freundlich">freundlich</mat-checkbox>
+
+          <div class="field-group">
+            <label>Kommt:</label>
+            <mat-button-toggle-group formControlName="kommt">
+              <mat-button-toggle *ngFor="let opt of kommtOptions" [value]="opt">{{ opt }}</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div class="field-group">
+            <label>Anfassbarkeit:</label>
+            <mat-button-toggle-group formControlName="anfassbarkeit">
+              <mat-button-toggle *ngFor="let opt of anfassbarkeitOptions" [value]="opt">{{ opt }}</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <mat-checkbox formControlName="laesstSichEinschraenken">lässt sich einschränken</mat-checkbox>
+          <mat-checkbox formControlName="laesstSichFesthalten">lässt sich festhalten</mat-checkbox>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Anmerkungen -->
+    <mat-card>
+      <mat-card-title>🗎 Anmerkungen</mat-card-title>
+      <mat-card-content>
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Anmerkungen</mat-label>
+          <textarea matInput formControlName="anmerkungen" rows="5"></textarea>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Submit -->
+    <div class="submit-container">
+      <button mat-raised-button color="primary" (click)="removeDog()">Hund entfernen</button>
+    </div>
+  </form>
+  } @else {
+    <div class="no-selection">Kein Hund selektiert</div>
+  }
+</div>
