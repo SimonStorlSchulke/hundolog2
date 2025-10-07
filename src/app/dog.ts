@@ -51,7 +51,7 @@ ${br}
 - [${dog.mitHunden.wirdBegruesst ? 'x' : ' '}] wird begrüßt${br}
 ${br}
 **Mit Menschen**${br}
-[${dog.mitMenschen.freundlich ? 'x' : ' '}] freundlich${br}
+- [${dog.mitMenschen.freundlich ? 'x' : ' '}] freundlich${br}
 kommt: ${dog.mitMenschen.kommt || '-'}${br}
 Anfassbarkeit: ${dog.mitMenschen.anfassbarkeit || '-'}${br}
 - [${dog.mitMenschen.laesstSichEinschraenken ? 'x' : ' '}] freundlich${br}
