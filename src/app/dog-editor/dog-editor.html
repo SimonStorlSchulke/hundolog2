@@ -27,6 +27,13 @@
             <mat-icon class="checkmark">check</mat-icon>
           }
         </div>
+      } @empty {
+        <div class="new-dog-empty">
+          <button class="flat" (click)="newDog()" matFab extended>
+            <mat-icon>add</mat-icon>
+            ersten Hund anlegen
+          </button>
+        </div>
       }
     </div>
 

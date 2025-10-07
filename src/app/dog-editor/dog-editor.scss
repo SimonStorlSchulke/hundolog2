@@ -132,11 +132,11 @@ mat-card-title {
   }
 
   &:hover {
-    background-color: #c5e5fd;
+    background-color: #c5dffd;
   }
 
   &.selected {
-    background-color: #b2defd;
+    background-color: #b2d3fd;
     cursor: default;
     pointer-events: none;
   }
@@ -162,6 +162,17 @@ mat-card-title {
 
 }
 
+.new-dog {
+  width: 100%;
+}
+
+.new-dog-empty {
+  height: calc(100dvh - 115px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 800px) {
   .topbar {
     width: 100dvw;
@@ -170,7 +181,6 @@ mat-card-title {
   .new-dog {
     position: fixed;
     bottom: 0;
-    width: 100%;
   }
 }
 
