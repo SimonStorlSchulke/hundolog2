@@ -1,11 +1,19 @@
 <div class="layout">
   <div class="list">
     <form class="topbar">
-
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>suchen</mat-label>
         <input (input)="search($event)" type="text" matInput [formControl]="searchFormControl">
       </mat-form-field>
+      <button [matMenuTriggerFor]="menu" class="flat" (click)="deselectDog()" matFab>
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button (click)="downloadAsText()" mat-menu-item>Als Text herunterladen</button>
+<!--
+        <button (click)="export()" mat-menu-item>Exportieren</button>
+-->
+      </mat-menu>
 
     </form>
 
@@ -22,7 +30,7 @@
       }
     </div>
 
-    <button class="new-dog" (click)="newDog()" matFab extended>
+    <button class="new-dog flat" (click)="newDog()" matFab extended>
       <mat-icon>add</mat-icon>
       neuer Hund
     </button>
@@ -33,7 +41,7 @@
 
   <form [formGroup]="dogForm" (ngSubmit)="saveDog()" class="editor">
     <div class="back-button-wrapper">
-      <button (click)="deselectDog()" matFab extended>
+      <button class="flat"  (click)="deselectDog()" matFab extended>
         <mat-icon>arrow_back</mat-icon>
         zurück
       </button>

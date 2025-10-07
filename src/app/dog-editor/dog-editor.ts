@@ -9,9 +9,10 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { debounce, interval } from 'rxjs';
-import { Dog } from 'src/app/dog';
+import { Dog, dogsToText } from 'src/app/dog';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -32,7 +33,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatButtonToggle,
     MatButton,
     MatIconModule,
-    MatFabButton, MatProgressBar,
+    MatFabButton, MatProgressBar, MatMenuTrigger, MatMenu, MatMenuItem,
   ],
   templateUrl: './dog-editor.html',
   styleUrl: './dog-editor.scss'
@@ -186,5 +187,44 @@ export class DogEditor implements OnInit {
 
   search($event: Event) {
     this.searchText.set(($event.target as HTMLInputElement).value)
+  }
+
+  async downloadAsText(): Promise<void> {
+    try {
+
+      const text = dogsToText(this.dogs())
+      const blob = new Blob([text], { type: "text/plain" });
+      const urlObject = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = urlObject;
+      link.download = "hundolog.md";
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(urlObject);
+    } catch (error) {
+      console.error("Error downloading JSON as TXT:", error);
+    }
+  }
+
+  async export(): Promise<void> {
+    try {
+      const jsonString = JSON.stringify(this.dogs(), null, 2); // pretty print JSON
+      const blob = new Blob([jsonString], { type: "text/plain" });
+      const urlObject = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = urlObject;
+      link.download = "hundolog_export.json";
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(urlObject);
+    } catch (error) {
+      console.error("Error downloading JSON:", error);
+    }
   }
 }
