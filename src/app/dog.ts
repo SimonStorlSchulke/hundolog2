@@ -1,13 +1,44 @@
-export type Dog = {
-  name: string,
-  anmerkungen: string,
+export type StrapiDogResponse = {
+  data: {
+    id: number,
+    attributes: {
+      data: Dog
+    }
+  },
+}
+export type StrapiDogsResponse = {
+  data: {
+    id: number,
+    attributes: {
+      data: Dog
+    }
+  }[]
+}
+
+export type StrapiUpdateDogRequest = {
+  data: {
+    data: Dog
+  },
+}
+
+export class Dog {
+  name: string = "";
+  id: number = -1;
+  anmerkungen: string = "";
+  foto: boolean = false;
+  video: boolean = false;
 
   gesundheit: {
     bewegung: "gut" | "läuft/sitzt komisch" | null,
     gewicht: "okay" | "dünn" | "dick" | null,
     verhalten: "wach/klar" | "zurückgezogen/kränklich/matt" | null,
     freitext: string,
-  },
+  } = {
+    bewegung: null,
+    gewicht: null,
+    verhalten: null,
+    freitext: "",
+  }
 
   mitHunden: {
     spielt: boolean,
@@ -16,7 +47,14 @@ export type Dog = {
     mobbtAndere: boolean,
     verkriechtSich: boolean,
     wirdBegruesst: boolean,
-  },
+  } = {
+    spielt: false,
+    streitet: false,
+    verwaltetRessourcen: false,
+    mobbtAndere: false,
+    verkriechtSich: false,
+    wirdBegruesst: false,
+  };
 
   mitMenschen: {
     freundlich: boolean,
@@ -24,8 +62,14 @@ export type Dog = {
     anfassbarkeit: "überall" | "teilweise" | "zeigt Abwehrverhalten" | null,
     laesstSichEinschraenken: boolean,
     laesstSichFesthalten: boolean,
-  },
-  completeness: number,
+  } = {
+    freundlich: false,
+    kommt: null,
+    anfassbarkeit: null,
+    laesstSichEinschraenken: false,
+    laesstSichFesthalten: false,
+  };
+  completeness = 0;
 }
 
 export function dogsToText(dogs: Dog[]) {

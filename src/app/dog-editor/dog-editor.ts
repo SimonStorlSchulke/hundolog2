@@ -5,16 +5,15 @@ import { MatButton, MatFabButton } from '@angular/material/button';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatLabel } from '@angular/material/form-field';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { debounce, interval } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { debounce, firstValueFrom, interval, skip, Subscription } from 'rxjs';
 import { Dog, dogsToText } from 'src/app/dog';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { StrapiService } from 'src/app/strapi.service';
 
 @Component({
   selector: 'app-dog-editor',
@@ -63,22 +62,26 @@ export class DogEditor implements OnInit {
     });
   });
 
-  constructor(private fb: FormBuilder) {}
+  private reloadSubscription?: Subscription;
+
+  constructor(private fb: FormBuilder, readonly strapiService: StrapiService, private matSnackBar: MatSnackBar) {
+    this.reloadDogs();
+
+    // watch for tab focus/visibility changes
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+
+    // start interval only when tab is visible
+    if (!document.hidden) {
+      this.startReloadInterval();
+    }
+  }
 
   ngOnInit(): void {
-
-    const soredDogsStr = localStorage.getItem("dogs");
-    if(soredDogsStr) {
-      try {
-        const storedDogs = JSON.parse(soredDogsStr) as Dog[];
-        this.dogs.set(storedDogs);
-      } catch (e) {
-        console.error("can't load dogs:", e);
-      }
-    }
-
-    this.dogForm = this.fb.group({
+      this.dogForm = this.fb.group({
       name: [''],
+      id: [-1],
+      foto: [false],
+      video: [false],
       anmerkungen: [''],
       gesundheit: this.fb.group({
         bewegung: [null],
@@ -104,14 +107,47 @@ export class DogEditor implements OnInit {
       completeness: [0],
     });
 
-    this.dogForm.statusChanges.pipe(debounce(i => interval(500))).subscribe(d => this.saveDog());
+    this.dogForm.valueChanges.pipe(debounce(i => interval(5000))).subscribe(d => this.saveDog());
   }
 
-  newDog() {
+  private handleVisibilityChange = () => {
+    if (document.hidden) {
+      this.stopReloadInterval();
+    } else {
+      this.reloadDogs();
+      this.startReloadInterval();
+    }
+  };
 
+  private startReloadInterval() {
+    this.stopReloadInterval();
+    this.reloadSubscription = interval(5000).subscribe(() => {
+      this.reloadDogs();
+    });
+  }
+
+  private stopReloadInterval() {
+    this.reloadSubscription?.unsubscribe();
+    this.reloadSubscription = undefined;
+  }
+
+  async reloadDogs() {
+    console.log("reloading dogs");
+    try {
+      const storedDogs = await firstValueFrom(this.strapiService.getDogs());
+      this.dogs.set(storedDogs);
+    } catch {
+      this.matSnackBar.open("Fehler beim Löschen")
+    }
+  }
+
+  async newDog() {
     const newDog = {
       name: '',
+      id: -1,
       anmerkungen: '',
+      foto: false,
+      video: false,
       gesundheit: {
         freitext: '',
         bewegung: null,
@@ -136,19 +172,37 @@ export class DogEditor implements OnInit {
       completeness: 0,
     }
 
+    try {
+      await firstValueFrom(this.strapiService.createDog(newDog));
+    } catch {
+      this.matSnackBar.open("Fehler beim Erstellen")
+    }
+
     this.dogs.update(dogs => [...dogs, newDog]);
 
     this.selectDog(this.dogs().indexOf(newDog));
   }
 
-  saveDog(): void {
+  async saveDog() {
     this.dogs.update((dogs) => {
       const editedDog: Dog = this.dogForm.value;
       editedDog.completeness = this.getDogCompleteness(editedDog);
       dogs[this.selectedDog()] = editedDog
       return [...dogs];
     })
-    this.saveToLocalStorage();
+
+    if(this.selectedDog() > -1 && this.dogForm.touched) {
+      console.log("saving dog", this.dogForm.touched)
+      const editedDog = this.dogs()[this.selectedDog()];
+
+      try {
+        await firstValueFrom(this.strapiService.updateDog(editedDog));
+        this.dogForm.markAsUntouched();
+      } catch {
+        this.matSnackBar.open("Fehler beim speichern")
+      }
+
+    }
   }
 
   getDogCompleteness(dog: Dog) {
@@ -164,21 +218,23 @@ export class DogEditor implements OnInit {
   }
 
   selectDog(index: number) {
+    this.dogForm.markAsUntouched();
     this.saveDog();
     this.selectedDog.set(index);
     this.dogForm.setValue(this.dogs()[index]);
   }
 
-  removeDog() {
+  async removeDog() {
+    try {
+      await firstValueFrom(this.strapiService.deleteDog(this.dogs()[this.selectedDog()].id));
+    } catch {
+      this.matSnackBar.open("Fehler beim Löschen")
+      return;
+    }
     const index = this.selectedDog();
     this.dogs.update(dogs => dogs.filter((_, i) => i !== index));
     this.selectedDog.set(-1);
-    this.saveToLocalStorage();
     this.askedRemoveDog.set(false);
-  }
-
-  saveToLocalStorage() {
-    localStorage.setItem('dogs', JSON.stringify(this.dogs()));
   }
 
   deselectDog() {
@@ -192,7 +248,6 @@ export class DogEditor implements OnInit {
 
   async downloadAsText(): Promise<void> {
     try {
-
       const text = dogsToText(this.dogs())
       const blob = new Blob([text], { type: "text/plain" });
       const urlObject = URL.createObjectURL(blob);

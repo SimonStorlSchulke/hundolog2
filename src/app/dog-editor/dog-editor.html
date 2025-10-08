@@ -57,12 +57,15 @@
     <mat-card>
       <mat-card-title>🐶 Allgemeines - {{dogs()[selectedDog()].name}}</mat-card-title>
       <mat-card-content>
-        <div class="form-grid">
           <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" />
           </mat-form-field>
-        </div>
+
+          <div class="checkbox-group">
+            <mat-checkbox formControlName="foto">foto</mat-checkbox>
+            <mat-checkbox formControlName="video">video</mat-checkbox>
+          </div>
       </mat-card-content>
     </mat-card>
 
