@@ -220,12 +220,18 @@ export class DogEditor implements OnInit {
     return completeness;
   }
 
-  selectDog(index: number) {
+  async selectDog(index: number) {
+    await this.saveDog();
     this.dogForm.markAsUntouched();
-    this.saveDog();
     this.selectedDog.set(index);
     this.dogForm.setValue(this.dogs()[index]);
   }
+
+  async deselectDog() {
+    await this.saveDog();
+    this.selectedDog.set(-1);
+  }
+
 
   async removeDog() {
     try {
@@ -238,11 +244,6 @@ export class DogEditor implements OnInit {
     this.dogs.update(dogs => dogs.filter((_, i) => i !== index));
     this.selectedDog.set(-1);
     this.askedRemoveDog.set(false);
-  }
-
-  deselectDog() {
-    this.saveDog();
-    this.selectedDog.set(-1);
   }
 
   search($event: Event) {
