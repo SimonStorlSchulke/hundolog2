@@ -203,7 +203,7 @@ mat-card-title {
 
 .slider {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
   width: 100%;
 
@@ -241,6 +241,14 @@ mat-card-title {
       outline-offset: -5px;
     }
   }
+
+  .from-to {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -10px;
+    font-size: 0.85rem;
+    color: #52443c;
+  }
 }
 
 .row {
@@ -259,4 +267,20 @@ mat-card-title {
     margin-top: -36px;
     flex-grow: 1;
   }
+}
+
+::ng-deep .mat-button-toggle-group .mat-button-toggle.toggle-reset {
+  background: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
+  font-weight: bold;
+
+  .mat-button-toggle-checkbox-wrapper {
+    display: none;
+  }
+}
+
+::ng-deep .mat-button-toggle-group .mat-button-toggle.toggle-reset:hover {
+  background: none !important;
+  cursor: pointer;
 }
