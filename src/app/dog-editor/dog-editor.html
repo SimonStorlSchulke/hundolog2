@@ -107,6 +107,12 @@
               </mat-button-toggle-group>
             </div>
 
+            <div class="field-group">
+              <label>Gewicht:</label>
+              <mat-button-toggle-group formControlName="gewicht">
+                <mat-button-toggle *ngFor="let opt of gewichtOptions" [value]="opt">{{ opt }}</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
 
             <div class="field-group">
               <label>Verhalten:</label>
@@ -184,7 +190,7 @@
 
       <!-- Anmerkungen -->
       <mat-card>
-        <mat-card-title>🗎 Anmerkungen</mat-card-title>
+        <mat-card-title>✏️ Anmerkungen</mat-card-title>
         <mat-card-content>
           <mat-form-field appearance="outline" style="width: 100%;">
             <mat-label>Anmerkungen</mat-label>

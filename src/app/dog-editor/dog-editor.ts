@@ -66,7 +66,7 @@ export class DogEditor implements OnInit {
 
   private reloadSubscription?: Subscription;
 
-  public maxCompleteness = 9;
+  public maxCompleteness = 13;
 
   constructor(private fb: FormBuilder, readonly strapiService: StrapiService, private matSnackBar: MatSnackBar) {
     this.reloadDogs();
@@ -195,6 +195,8 @@ export class DogEditor implements OnInit {
   getDogCompleteness(dog: Dog) {
     let completeness = 0;
     if(dog.name) completeness += 1;
+    if(dog.geschlecht) completeness += 1;
+    if(!isNaN(dog.groesseCm)) completeness += 1;
     if(dog.foto) completeness += 1;
     if(dog.video) completeness += 1;
     if(dog.mitMenschen.kommt) completeness += 1;
@@ -203,6 +205,8 @@ export class DogEditor implements OnInit {
     if(dog.gesundheit.bewegung) completeness += 1;
     if(dog.gesundheit.gewicht) completeness += 1;
     if(dog.gesundheit.verhalten) completeness += 1;
+    if(!isNaN(dog.schwierigkeit)) completeness += 1;
+    if(!isNaN(dog.mitHunden.bewegungsfreiheit)) completeness += 1;
     return completeness;
   }
 
