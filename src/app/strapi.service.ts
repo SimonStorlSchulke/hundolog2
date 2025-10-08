@@ -46,13 +46,13 @@ export class StrapiService {
       })
   }
 
-  createDog(dog: Dog) {
+  createDog(dog: Dog): Observable<number> {
     const request: StrapiUpdateDogRequest = {data: {data: dog}};
     let url = decodeURIComponent(StrapiService.apiBaseUrl + 'hundologs');
     return this.httpClient
       .post(url, request, {
         headers: StrapiService.headers,
-      })
+      }).pipe(map((r: any) => r.data.id))
   }
 
   deleteDog(id: number) {

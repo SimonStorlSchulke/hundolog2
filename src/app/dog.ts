@@ -25,6 +25,9 @@ export class Dog {
   name: string = "";
   id: number = -1;
   anmerkungen: string = "";
+  schwierigkeit: number = NaN;
+  groesseCm: number = NaN;
+  geschlecht: "Rüde" | "Hündin" | null = null;
   foto: boolean = false;
   video: boolean = false;
 
@@ -47,6 +50,7 @@ export class Dog {
     mobbtAndere: boolean,
     verkriechtSich: boolean,
     wirdBegruesst: boolean,
+    bewegungsfreiheit: number,
   } = {
     spielt: false,
     streitet: false,
@@ -54,16 +58,23 @@ export class Dog {
     mobbtAndere: false,
     verkriechtSich: false,
     wirdBegruesst: false,
+    bewegungsfreiheit: NaN,
   };
 
   mitMenschen: {
     freundlich: boolean,
+    schnappt: boolean,
+    zeigtSonstigeAggressionen: boolean,
+    wirdSteif: boolean,
     kommt: "sofort" | "zögerlich" | "hält Abstand" | null,
     anfassbarkeit: "überall" | "teilweise" | "zeigt Abwehrverhalten" | null,
     laesstSichEinschraenken: boolean,
     laesstSichFesthalten: boolean,
   } = {
     freundlich: false,
+    schnappt: false,
+    zeigtSonstigeAggressionen: false,
+    wirdSteif: false,
     kommt: null,
     anfassbarkeit: null,
     laesstSichEinschraenken: false,

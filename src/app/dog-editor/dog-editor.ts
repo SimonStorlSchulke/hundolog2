@@ -10,8 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { debounce, firstValueFrom, interval, skip, Subscription } from 'rxjs';
+import { debounce, firstValueFrom, interval, Subscription } from 'rxjs';
 import { Dog, dogsToText } from 'src/app/dog';
 import { StrapiService } from 'src/app/strapi.service';
 
@@ -32,7 +33,7 @@ import { StrapiService } from 'src/app/strapi.service';
     MatButtonToggle,
     MatButton,
     MatIconModule,
-    MatFabButton, MatProgressBar, MatMenuTrigger, MatMenu, MatMenuItem,
+    MatFabButton, MatProgressBar, MatMenuTrigger, MatMenu, MatMenuItem, MatSlider, MatSliderThumb,
   ],
   templateUrl: './dog-editor.html',
   styleUrl: './dog-editor.scss'
@@ -42,6 +43,7 @@ export class DogEditor implements OnInit {
 
   bewegungOptions = ["gut", "läuft/sitzt komisch"];
   gewichtOptions = ["okay", "dünn", "dick"];
+  geschlechtOptions = ["Rüde", "Hündin"];
   verhaltenOptions = ["wach/klar", "zurückgezogen/kränklich/matt"];
   kommtOptions = ["sofort", "zögerlich", "hält Abstand"];
   anfassbarkeitOptions = [
@@ -64,6 +66,8 @@ export class DogEditor implements OnInit {
 
   private reloadSubscription?: Subscription;
 
+  public maxCompleteness = 9;
+
   constructor(private fb: FormBuilder, readonly strapiService: StrapiService, private matSnackBar: MatSnackBar) {
     this.reloadDogs();
 
@@ -83,6 +87,9 @@ export class DogEditor implements OnInit {
       foto: [false],
       video: [false],
       anmerkungen: [''],
+      schwierigkeit: [0],
+      groesseCm: [0],
+      geschlecht: [null],
       gesundheit: this.fb.group({
         bewegung: [null],
         gewicht: [null],
@@ -96,9 +103,13 @@ export class DogEditor implements OnInit {
         mobbtAndere: [false],
         verkriechtSich: [false],
         wirdBegruesst: [false],
+        bewegungsfreiheit: [0],
       }),
       mitMenschen: this.fb.group({
         freundlich: [false],
+        schnappt: [false],
+        zeigtSonstigeAggressionen: [false],
+        wirdSteif: [false],
         kommt: [null],
         anfassbarkeit: [null],
         laesstSichEinschraenken: [false],
@@ -143,38 +154,10 @@ export class DogEditor implements OnInit {
 
   async newDog() {
     await this.saveDog();
-    const newDog = {
-      name: '',
-      id: -1,
-      anmerkungen: '',
-      foto: false,
-      video: false,
-      gesundheit: {
-        freitext: '',
-        bewegung: null,
-        gewicht: null,
-        verhalten: null,
-      },
-      mitHunden: {
-        spielt: false,
-        mobbtAndere: false,
-        streitet: false,
-        verkriechtSich: false,
-        verwaltetRessourcen: false,
-        wirdBegruesst: false,
-      },
-      mitMenschen: {
-        freundlich: false,
-        laesstSichEinschraenken: false,
-        laesstSichFesthalten: false,
-        kommt: null,
-        anfassbarkeit: null,
-      },
-      completeness: 0,
-    }
+    const newDog = new Dog();
 
     try {
-      await firstValueFrom(this.strapiService.createDog(newDog));
+      newDog.id = await firstValueFrom(this.strapiService.createDog(newDog))
     } catch {
       this.matSnackBar.open("Fehler beim Erstellen")
     }
@@ -192,9 +175,8 @@ export class DogEditor implements OnInit {
       dogs[this.selectedDog()] = editedDog
       return [...dogs];
     })
-
-    if(this.selectedDog() > -1 && this.dogForm.touched) {
-      console.log("saving dog", this.dogForm.touched)
+    if(this.selectedDog() > -1 && this.dogForm.dirty) {
+      console.log("saving dog")
       const editedDog = this.dogs()[this.selectedDog()];
 
       try {
@@ -212,13 +194,15 @@ export class DogEditor implements OnInit {
 
   getDogCompleteness(dog: Dog) {
     let completeness = 0;
-    if(dog.name) completeness += 10;
-    if(dog.mitMenschen.kommt) completeness += 16;
-    if(dog.mitMenschen.anfassbarkeit) completeness += 16;
-    if(dog.anmerkungen) completeness += 16;
-    if(dog.gesundheit.bewegung) completeness += 16;
-    if(dog.gesundheit.gewicht) completeness += 16;
-    if(dog.gesundheit.verhalten) completeness += 16;
+    if(dog.name) completeness += 1;
+    if(dog.foto) completeness += 1;
+    if(dog.video) completeness += 1;
+    if(dog.mitMenschen.kommt) completeness += 1;
+    if(dog.mitMenschen.anfassbarkeit) completeness += 1;
+    if(dog.anmerkungen) completeness += 1;
+    if(dog.gesundheit.bewegung) completeness += 1;
+    if(dog.gesundheit.gewicht) completeness += 1;
+    if(dog.gesundheit.verhalten) completeness += 1;
     return completeness;
   }
 
@@ -226,7 +210,7 @@ export class DogEditor implements OnInit {
     if(!skipSave) {
       await this.saveDog();
     }
-    this.dogForm.markAsUntouched();
+    this.dogForm.markAsPristine();
     this.selectedDog.set(index);
     this.dogForm.setValue(this.dogs()[index]);
   }

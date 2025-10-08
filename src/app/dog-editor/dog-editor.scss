@@ -132,17 +132,17 @@ mat-card-title {
   }
 
   &:hover {
-    background-color: #c5dffd;
+    background-color: #fdd8c5;
   }
 
   &.selected {
-    background-color: #b2d3fd;
+    background-color: #f19156;
     cursor: default;
     pointer-events: none;
   }
 
   .checkmark {
-    color: #146ddf;
+    color: #df6f14;
   }
 
   mat-progress-bar {
@@ -187,4 +187,76 @@ mat-card-title {
 .flat {
   border-radius: 0;
   box-shadow: none;
+}
+
+::ng-deep {
+  .mdc-slider__track, mdc-slider__track--inactive, mdc-slider__track--active {
+    background: red !important;
+  }
+  .mat-slider-thumb {
+    transform: scale(0) !important;
+  }
+  .mat-slider-thumb-label-text {
+    opacity: 1 !important;
+  }
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+
+  input {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    height: 10px;
+    flex-grow: 1;
+    border-radius: 12px;
+    background: #f4c398;
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 19px;
+      height: 19px;
+      cursor: pointer;
+      border-radius: 12px;
+      border: 2px solid black;
+      outline: 4px solid #fff;
+      outline-offset: -5px;
+    }
+
+    &::-moz-range-thumb {
+      width: 19px;
+      height: 19px;
+      cursor: pointer;
+      border-radius: 12px;
+      border: 2px solid black;
+      outline: 4px solid #fff;
+      outline-offset: -5px;
+    }
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 32px;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    margin-top: 12px;
+    flex-grow: 1;
+  }
+
+  .field-group {
+    margin-top: -36px;
+    flex-grow: 1;
+  }
 }
