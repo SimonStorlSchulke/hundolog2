@@ -142,6 +142,7 @@ export class DogEditor implements OnInit {
   }
 
   async newDog() {
+    await this.saveDog();
     const newDog = {
       name: '',
       id: -1,
@@ -180,7 +181,8 @@ export class DogEditor implements OnInit {
 
     this.dogs.update(dogs => [...dogs, newDog]);
 
-    this.selectDog(this.dogs().indexOf(newDog));
+    await this.selectDog(this.dogs().indexOf(newDog), true);
+
   }
 
   async saveDog() {
@@ -197,9 +199,9 @@ export class DogEditor implements OnInit {
 
       try {
         if(editedDog.id == -1) {
-          firstValueFrom(this.strapiService.createDog(editedDog))
+          await firstValueFrom(this.strapiService.createDog(editedDog))
         } else {
-          firstValueFrom(this.strapiService.updateDog(editedDog))
+          await firstValueFrom(this.strapiService.updateDog(editedDog))
         }
       } catch {
         this.matSnackBar.open("Fehler beim speichern")
@@ -220,8 +222,10 @@ export class DogEditor implements OnInit {
     return completeness;
   }
 
-  async selectDog(index: number) {
-    await this.saveDog();
+  async selectDog(index: number, skipSave = false) {
+    if(!skipSave) {
+      await this.saveDog();
+    }
     this.dogForm.markAsUntouched();
     this.selectedDog.set(index);
     this.dogForm.setValue(this.dogs()[index]);
