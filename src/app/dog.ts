@@ -89,13 +89,18 @@ export function dogsToText(dogs: Dog[]) {
   const br = '  ';
 
   for (const dog of dogs) {
+    const bewFr = isNaN(dog.mitHunden.bewegungsfreiheit) ? '-' : dog.mitHunden.bewegungsfreiheit * 100 + "%";
+    const schwierigkeit = isNaN(dog.schwierigkeit) ? '-' : dog.schwierigkeit * 100 + "%";
+    const geschlecht = dog.geschlecht ? (dog.geschlecht == 'Rüde' ? '♂' : '♀') : "";
+
     const dogText = `
-## ${dog.name || 'unbenannter Hund'}
+## ${dog.name || 'unbenannter Hund'} ${geschlecht}
 
 **Gesundheit:**
 Bewegung: ${dog.gesundheit.bewegung || '-'}${br}
 Gewicht: ${dog.gesundheit.gewicht || '-'}${br}
 Verhalten: ${dog.gesundheit.verhalten || '-'}${br}
+Schwierigkeit: ${schwierigkeit}${br}
 ${br}
 **Mit Hunden:**${br}
 - [${dog.mitHunden.spielt ? 'x' : ' '}] spielt${br}
@@ -104,9 +109,13 @@ ${br}
 - [${dog.mitHunden.mobbtAndere ? 'x' : ' '}] mobbt andere${br}
 - [${dog.mitHunden.verkriechtSich ? 'x' : ' '}] verkriecht sich${br}
 - [${dog.mitHunden.wirdBegruesst ? 'x' : ' '}] wird begrüßt${br}
+Bewegungsfreiheit: ${bewFr}${br}
 ${br}
 **Mit Menschen**${br}
 - [${dog.mitMenschen.freundlich ? 'x' : ' '}] freundlich${br}
+- [${dog.mitMenschen.schnappt ? 'x' : ' '}] schnappt${br}
+- [${dog.mitMenschen.zeigtSonstigeAggressionen ? 'x' : ' '}] zeigt sonstige Aggressionen${br}
+- [${dog.mitMenschen.wirdSteif ? 'x' : ' '}] wird steif${br}
 kommt: ${dog.mitMenschen.kommt || '-'}${br}
 Anfassbarkeit: ${dog.mitMenschen.anfassbarkeit || '-'}${br}
 - [${dog.mitMenschen.laesstSichEinschraenken ? 'x' : ' '}] lässt sich einschränken${br}
