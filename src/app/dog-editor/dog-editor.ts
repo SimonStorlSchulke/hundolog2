@@ -196,8 +196,11 @@ export class DogEditor implements OnInit {
       const editedDog = this.dogs()[this.selectedDog()];
 
       try {
-        await firstValueFrom(this.strapiService.updateDog(editedDog));
-        this.dogForm.markAsUntouched();
+        if(editedDog.id == -1) {
+          firstValueFrom(this.strapiService.createDog(editedDog))
+        } else {
+          firstValueFrom(this.strapiService.updateDog(editedDog))
+        }
       } catch {
         this.matSnackBar.open("Fehler beim speichern")
       }
