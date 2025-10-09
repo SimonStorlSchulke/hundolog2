@@ -87,8 +87,8 @@ export class DogEditor implements OnInit {
       foto: [false],
       video: [false],
       anmerkungen: [''],
-      schwierigkeit: [0],
-      groesseCm: [0],
+      schwierigkeit: [NaN],
+      groesseCm: [NaN],
       geschlecht: [null],
       gesundheit: this.fb.group({
         bewegung: [null],
@@ -103,7 +103,7 @@ export class DogEditor implements OnInit {
         mobbtAndere: [false],
         verkriechtSich: [false],
         wirdBegruesst: [false],
-        bewegungsfreiheit: [0],
+        bewegungsfreiheit: [NaN],
       }),
       mitMenschen: this.fb.group({
         freundlich: [false],
@@ -118,7 +118,7 @@ export class DogEditor implements OnInit {
       completeness: [0],
     });
 
-    this.dogForm.valueChanges.pipe(debounce(i => interval(5000))).subscribe(d => this.saveDog());
+    this.dogForm.valueChanges.pipe(debounce(i => interval(3000))).subscribe(d => this.saveDog());
   }
 
   private handleVisibilityChange = () => {
@@ -188,26 +188,29 @@ export class DogEditor implements OnInit {
       } catch {
         this.matSnackBar.open("Fehler beim speichern")
       }
-
     }
   }
 
   getDogCompleteness(dog: Dog) {
     let completeness = 0;
-    if(dog.name) completeness += 1;
-    if(dog.geschlecht) completeness += 1;
-    if(!isNaN(dog.groesseCm)) completeness += 1;
-    if(dog.foto) completeness += 1;
-    if(dog.video) completeness += 1;
-    if(dog.mitMenschen.kommt) completeness += 1;
-    if(dog.mitMenschen.anfassbarkeit) completeness += 1;
-    if(dog.anmerkungen) completeness += 1;
-    if(dog.gesundheit.bewegung) completeness += 1;
-    if(dog.gesundheit.gewicht) completeness += 1;
-    if(dog.gesundheit.verhalten) completeness += 1;
-    if(!isNaN(dog.schwierigkeit)) completeness += 1;
-    if(!isNaN(dog.mitHunden.bewegungsfreiheit)) completeness += 1;
+    if(dog.name) { completeness += 1;}
+    if(dog.geschlecht) { completeness += 1;}
+    if(this.numExists(dog.groesseCm)) { completeness += 1;}
+    if(dog.foto) { completeness += 1;}
+    if(dog.video) { completeness += 1;}
+    if(dog.mitMenschen.kommt) { completeness += 1;}
+    if(dog.mitMenschen.anfassbarkeit) { completeness += 1;}
+    if(dog.anmerkungen) { completeness += 1;}
+    if(dog.gesundheit.bewegung) { completeness += 1;}
+    if(dog.gesundheit.gewicht) { completeness += 1;}
+    if(dog.gesundheit.verhalten) { completeness += 1;}
+    if(this.numExists(dog.schwierigkeit)) { completeness += 1;}
+    if(this.numExists(dog.mitHunden.bewegungsfreiheit)) { completeness += 1;}
     return completeness;
+  }
+
+  private numExists(value: number | null) {
+    return value != null && !isNaN(value);
   }
 
   async selectDog(index: number, skipSave = false) {

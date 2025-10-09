@@ -126,6 +126,7 @@ mat-card-title {
   font-weight: 500;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   &.hidden {
     display: none;
@@ -283,4 +284,14 @@ mat-card-title {
 ::ng-deep .mat-button-toggle-group .mat-button-toggle.toggle-reset:hover {
   background: none !important;
   cursor: pointer;
+}
+.progressbar {
+  background-color: #fff;
+  height: 5px;
+  width: 64px;
+}
+
+.progressbar>div {
+  background-color: #92571b;
+  height: 5px;
 }

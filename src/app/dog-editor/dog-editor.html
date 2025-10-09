@@ -16,11 +16,14 @@
 
     <div class="list-entries">
       @for (dog of dogs(); track $index) {
+        @let geschlecht = dog.geschlecht ? (dog.geschlecht == 'Rüde' ? ' ♂' : ' ♀') : "";
         <div class="list-entry" [class.hidden]="!shownDogs().includes(dog)" [class.selected]="selectedDog() == $index" (click)="selectDog($index)">
-          <span>{{ dog.name || 'neuer Hund' }}</span>
-          @let completenessPercent = (dog.completeness / maxCompleteness) * 100;
+          <span>{{ dog.name + geschlecht || 'neuer Hund' }}</span>
+          @let completenessPercent = ((dog.completeness ?? 0) / maxCompleteness) * 100;
           @if (completenessPercent < 100) {
-            <mat-progress-bar mode="determinate" [value]="completenessPercent"></mat-progress-bar>
+            <div class="progressbar">
+              <div [style.width]="completenessPercent + '%'"></div>
+            </div>
           } @else {
             <mat-icon class="checkmark">check</mat-icon>
           }
@@ -124,14 +127,6 @@
                 <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
               </mat-button-toggle-group>
             </div>
-
-            <!--
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Freitext</mat-label>
-                      <textarea matInput formControlName="freitext" rows="2"></textarea>
-                    </mat-form-field>
-            -->
-
           </div>
         </mat-card-content>
       </mat-card>
