@@ -38,8 +38,11 @@
       @for (dog of dogs(); track $index) {
         @let geschlecht = dog.geschlecht ? (dog.geschlecht == 'Rüde' ? ' ♂' : ' ♀') : "";
         <div class="list-entry" [class.hidden]="!shownDogs().includes(dog)" [class.selected]="selectedDog() == $index" (click)="selectDog($index)">
-          <span>{{ dog.name + geschlecht || 'neuer Hund' }}</span>
-            <mat-icon class="ic" [class.visible]="dog.foto">photo_camera</mat-icon>
+          <span class="name-with-gender">{{ dog.name || 'neuer Hund' }}
+            @if (dog.geschlecht) {
+              <mat-icon>{{dog.geschlecht == 'Rüde' ? 'male' : 'female'}}</mat-icon>
+            }</span>
+          <mat-icon class="ic" [class.visible]="dog.foto">photo_camera</mat-icon>
             <mat-icon class="ic" [class.visible]="dog.video">videocam</mat-icon>
           @let completenessPercent = ((dog.completeness ?? 0) / maxCompleteness) * 100;
           @if (completenessPercent < 100) {
