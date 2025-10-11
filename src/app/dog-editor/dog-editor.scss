@@ -190,17 +190,6 @@ mat-card-title {
   box-shadow: none;
 }
 
-::ng-deep {
-  .mdc-slider__track, mdc-slider__track--inactive, mdc-slider__track--active {
-    background: red !important;
-  }
-  .mat-slider-thumb {
-    transform: scale(0) !important;
-  }
-  .mat-slider-thumb-label-text {
-    opacity: 1 !important;
-  }
-}
 
 .slider {
   display: flex;
@@ -289,9 +278,22 @@ mat-card-title {
   background-color: #fff;
   height: 5px;
   width: 64px;
+  border-radius: 12px;
+
 }
 
 .progressbar>div {
   background-color: #92571b;
+  border-radius: 12px;
   height: 5px;
+}
+
+.ic {
+  color: rgb(114, 54, 0) !important;
+  opacity: 0;
+  transform: scale(0.8);
+
+  &.visible {
+    opacity: 100%;
+  }
 }

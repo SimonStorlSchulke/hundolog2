@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatFabButton } from '@angular/material/button';
@@ -9,8 +9,6 @@ import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/fo
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounce, firstValueFrom, interval, Subscription } from 'rxjs';
 import { Dog, dogsToText } from 'src/app/dog';
@@ -20,8 +18,9 @@ import { StrapiService } from 'src/app/strapi.service';
   selector: 'app-dog-editor',
   imports: [
     ReactiveFormsModule,
-    FormsModule, MatFormFieldModule, MatInputModule,
-    NgForOf,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatCheckbox,
     MatCardContent,
     MatCardTitle,
@@ -33,8 +32,11 @@ import { StrapiService } from 'src/app/strapi.service';
     MatButtonToggle,
     MatButton,
     MatIconModule,
-    MatFabButton, MatProgressBar, MatMenuTrigger, MatMenu, MatMenuItem, MatSlider, MatSliderThumb,
-  ],
+    MatFabButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem
+],
   templateUrl: './dog-editor.html',
   styleUrl: './dog-editor.scss'
 })
@@ -56,9 +58,11 @@ export class DogEditor implements OnInit {
   selectedDog = signal<number>(-1);
   searchText = signal('');
   askedRemoveDog = signal(false);
+  searchedGender = signal<"Rüde" | "Hündin" | "mf">("mf");
 
   shownDogs = computed(() => {
     return this.dogs().filter(dog => {
+      if(this.searchedGender() != "mf" && dog.geschlecht != this.searchedGender() ) return false;
       if(this.searchText().trim() == '') return true;
       return dog.name.toLowerCase().includes(this.searchText().toLowerCase())
     });
@@ -148,7 +152,7 @@ export class DogEditor implements OnInit {
       const storedDogs = await firstValueFrom(this.strapiService.getDogs());
       this.dogs.set(storedDogs);
     } catch {
-      this.matSnackBar.open("Fehler beim Löschen")
+      this.showError("Fehler beim Löschen")
     }
   }
 
@@ -159,7 +163,7 @@ export class DogEditor implements OnInit {
     try {
       newDog.id = await firstValueFrom(this.strapiService.createDog(newDog))
     } catch {
-      this.matSnackBar.open("Fehler beim Erstellen")
+      this.showError("Fehler beim Erstellen")
     }
 
     this.dogs.update(dogs => [...dogs, newDog]);
@@ -186,7 +190,7 @@ export class DogEditor implements OnInit {
           await firstValueFrom(this.strapiService.updateDog(editedDog))
         }
       } catch {
-        this.matSnackBar.open("Fehler beim speichern")
+        this.showError("Fehler beim speichern")
       }
     }
   }
@@ -227,12 +231,11 @@ export class DogEditor implements OnInit {
     this.selectedDog.set(-1);
   }
 
-
   async removeDog() {
     try {
       await firstValueFrom(this.strapiService.deleteDog(this.dogs()[this.selectedDog()].id));
     } catch {
-      this.matSnackBar.open("Fehler beim Löschen")
+      this.showError("Fehler beim Löschen")
       return;
     }
     const index = this.selectedDog();
@@ -262,6 +265,10 @@ export class DogEditor implements OnInit {
     } catch (error) {
       console.error("Error downloading JSON as TXT:", error);
     }
+  }
+
+  private showError(text: string) {
+    this.matSnackBar.open(text, "X", {"duration": 2000});
   }
 
   async export(): Promise<void> {

@@ -5,7 +5,27 @@
         <mat-label>suchen</mat-label>
         <input (input)="search($event)" type="text" matInput [formControl]="searchFormControl">
       </mat-form-field>
-      <button [matMenuTriggerFor]="menu" class="flat" (click)="deselectDog()" matFab>
+
+
+      @switch (searchedGender()) {
+        @case ("mf") {
+          <button (click)="searchedGender.set('Hündin')" class="flat" matFab>
+            <mat-icon>transgender</mat-icon>
+          </button>
+        }
+        @case ("Hündin") {
+          <button (click)="searchedGender.set('Rüde')" class="flat" matFab>
+            <mat-icon>female</mat-icon>
+          </button>
+        }
+        @case ("Rüde") {
+          <button (click)="searchedGender.set('mf')" class="flat" matFab>
+            <mat-icon>male</mat-icon>
+          </button>
+        }
+      }
+
+      <button [matMenuTriggerFor]="menu" class="flat" matFab>
         <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -19,6 +39,8 @@
         @let geschlecht = dog.geschlecht ? (dog.geschlecht == 'Rüde' ? ' ♂' : ' ♀') : "";
         <div class="list-entry" [class.hidden]="!shownDogs().includes(dog)" [class.selected]="selectedDog() == $index" (click)="selectDog($index)">
           <span>{{ dog.name + geschlecht || 'neuer Hund' }}</span>
+            <mat-icon class="ic" [class.visible]="dog.foto">photo_camera</mat-icon>
+            <mat-icon class="ic" [class.visible]="dog.video">videocam</mat-icon>
           @let completenessPercent = ((dog.completeness ?? 0) / maxCompleteness) * 100;
           @if (completenessPercent < 100) {
             <div class="progressbar">
@@ -28,7 +50,7 @@
             <mat-icon class="checkmark">check</mat-icon>
           }
         </div>
-      } @empty {
+        } @empty {
         <div class="new-dog-empty">
           <button class="flat" (click)="newDog()" matFab extended>
             <mat-icon>add</mat-icon>
@@ -68,7 +90,9 @@
             <div class="field-group">
               <label>Geschlecht:</label>
               <mat-button-toggle-group formControlName="geschlecht">
-                <mat-button-toggle *ngFor="let opt of geschlechtOptions" [value]="opt">{{ opt }}</mat-button-toggle>
+                @for (opt of geschlechtOptions; track opt) {
+                  <mat-button-toggle [value]="opt">{{ opt }}</mat-button-toggle>
+                }
               </mat-button-toggle-group>
             </div>
           </div>
@@ -78,144 +102,154 @@
             <mat-checkbox formControlName="video">video</mat-checkbox>
           </div>
           <br>
-          <div class="slider">
-            <label for="schwierigkeit">Schwierigkeit</label>
-            <input
-              formControlName="schwierigkeit" id="schwierigkeit" name="schwierigkeit"
-              style="background: linear-gradient(90deg, #61f261, #f5e781, #f83434)"
-              step="0.05" type="range" min="0" max="1"
-            />
-            <div class="from-to">
-              <span class="from">für Anfänger</span>
-              <span class="to">nicht vermittelbar</span>
-            </div>
-          </div>
-          <br>
-          <mat-form-field>
-            <mat-label>Größe in cm</mat-label>
-            <input type="number" matInput formControlName="groesseCm">
-          </mat-form-field>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Gesundheit -->
-      <mat-card>
-        <mat-card-title>❤️ Gesundheit</mat-card-title>
-        <mat-card-content>
-          <div formGroupName="gesundheit" class="section">
-
-            <div class="field-group">
-              <label>Bewegung:</label>
-              <mat-button-toggle-group formControlName="bewegung">
-                <mat-button-toggle *ngFor="let opt of bewegungOptions" [value]="opt">{{ opt }}</mat-button-toggle>
-                <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
-              </mat-button-toggle-group>
-            </div>
-
-            <div class="field-group">
-              <label>Gewicht:</label>
-              <mat-button-toggle-group formControlName="gewicht">
-                <mat-button-toggle *ngFor="let opt of gewichtOptions" [value]="opt">{{ opt }}</mat-button-toggle>
-                <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
-              </mat-button-toggle-group>
-            </div>
-
-            <div class="field-group">
-              <label>Verhalten:</label>
-              <mat-button-toggle-group formControlName="verhalten">
-                <mat-button-toggle *ngFor="let opt of verhaltenOptions" [value]="opt">{{ opt }}</mat-button-toggle>
-                <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
-              </mat-button-toggle-group>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Mit Hunden -->
-      <mat-card>
-        <mat-card-title>🐕 Mit Hunden</mat-card-title>
-        <mat-card-content>
-          <div formGroupName="mitHunden" class="checkbox-group">
-            <mat-checkbox formControlName="spielt">spielt</mat-checkbox>
-            <mat-checkbox formControlName="streitet">streitet sich oft</mat-checkbox>
-            <mat-checkbox formControlName="verwaltetRessourcen">verwaltet Ressourcen</mat-checkbox>
-            <mat-checkbox formControlName="mobbtAndere">mobbt andere</mat-checkbox>
-            <mat-checkbox formControlName="verkriechtSich">verkriecht sich</mat-checkbox>
-            <mat-checkbox formControlName="wirdBegruesst">wird begrüßt</mat-checkbox>
-
             <div class="slider">
-              <label for="bewegungsfreiheit">Bewegungsfreiheit</label>
+              <label for="schwierigkeit">Schwierigkeit</label>
               <input
-                formControlName="bewegungsfreiheit" id="bewegungsfreiheit" name="bewegungsfreiheit"
-                style="background: linear-gradient(-90deg, #61f261, #f5e781, #f83434)"
+                formControlName="schwierigkeit" id="schwierigkeit" name="schwierigkeit"
+                style="background: linear-gradient(90deg, #2a9d8f, #e9c46a, #f4a261, #e76f51)"
                 step="0.05" type="range" min="0" max="1"
-              />
+                />
               <div class="from-to">
-                <span class="from">gar nicht</span>
-                <span class="to">überall</span>
+                <span class="from">für Anfänger</span>
+                <span class="to">nicht vermittelbar</span>
               </div>
             </div>
+            <br>
+              <mat-form-field>
+                <mat-label>Größe in cm</mat-label>
+                <input type="number" matInput formControlName="groesseCm">
+              </mat-form-field>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Gesundheit -->
+          <mat-card>
+            <mat-card-title>❤️ Gesundheit</mat-card-title>
+            <mat-card-content>
+              <div formGroupName="gesundheit" class="section">
+
+                <div class="field-group">
+                  <label>Bewegung:</label>
+                  <mat-button-toggle-group formControlName="bewegung">
+                    @for (opt of bewegungOptions; track opt) {
+                      <mat-button-toggle [value]="opt">{{ opt }}</mat-button-toggle>
+                    }
+                    <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+
+                <div class="field-group">
+                  <label>Gewicht:</label>
+                  <mat-button-toggle-group formControlName="gewicht">
+                    @for (opt of gewichtOptions; track opt) {
+                      <mat-button-toggle [value]="opt">{{ opt }}</mat-button-toggle>
+                    }
+                    <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+
+                <div class="field-group">
+                  <label>Verhalten:</label>
+                  <mat-button-toggle-group formControlName="verhalten">
+                    @for (opt of verhaltenOptions; track opt) {
+                      <mat-button-toggle [value]="opt">{{ opt }}</mat-button-toggle>
+                    }
+                    <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Mit Hunden -->
+          <mat-card>
+            <mat-card-title>🐕 Mit Hunden</mat-card-title>
+            <mat-card-content>
+              <div formGroupName="mitHunden" class="checkbox-group">
+                <mat-checkbox formControlName="spielt">spielt</mat-checkbox>
+                <mat-checkbox formControlName="streitet">streitet sich oft</mat-checkbox>
+                <mat-checkbox formControlName="verwaltetRessourcen">verwaltet Ressourcen</mat-checkbox>
+                <mat-checkbox formControlName="mobbtAndere">mobbt andere</mat-checkbox>
+                <mat-checkbox formControlName="verkriechtSich">verkriecht sich</mat-checkbox>
+                <mat-checkbox formControlName="wirdBegruesst">wird begrüßt</mat-checkbox>
+
+                <div class="slider">
+                  <label for="bewegungsfreiheit">Bewegungsfreiheit</label>
+                  <input
+                    formControlName="bewegungsfreiheit" id="bewegungsfreiheit" name="bewegungsfreiheit"
+                    style="background: linear-gradient(-90deg, #2a9d8f, #e9c46a, #f4a261, #e76f51)"
+                    step="0.05" type="range" min="0" max="1"
+                    />
+                  <div class="from-to">
+                    <span class="from">gar nicht</span>
+                    <span class="to">überall</span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Mit Menschen -->
+          <mat-card>
+            <mat-card-title>👩‍🦰 Mit Menschen</mat-card-title>
+            <mat-card-content>
+              <div formGroupName="mitMenschen" class="section">
+                <div class="checkbox-group">
+                  <mat-checkbox formControlName="freundlich">freundlich</mat-checkbox>
+                  <mat-checkbox formControlName="schnappt">schnappt</mat-checkbox>
+                  <mat-checkbox formControlName="zeigtSonstigeAggressionen">zeigt sonstige Aggressionen</mat-checkbox>
+                  <mat-checkbox formControlName="wirdSteif">wird steif</mat-checkbox>
+                </div>
+
+                <div class="field-group">
+                  <label>Kommt:</label>
+                  <mat-button-toggle-group formControlName="kommt">
+                    @for (opt of kommtOptions; track opt) {
+                      <mat-button-toggle [value]="opt">{{ opt }}</mat-button-toggle>
+                    }
+                    <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+
+                <div class="field-group">
+                  <label>Anfassbarkeit:</label>
+                  <mat-button-toggle-group formControlName="anfassbarkeit">
+                    @for (opt of anfassbarkeitOptions; track opt) {
+                      <mat-button-toggle [value]="opt">{{ opt }}</mat-button-toggle>
+                    }
+                    <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+
+                <mat-checkbox formControlName="laesstSichEinschraenken">lässt sich einschränken</mat-checkbox>
+                <mat-checkbox formControlName="laesstSichFesthalten">lässt sich festhalten</mat-checkbox>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Anmerkungen -->
+          <mat-card>
+            <mat-card-title>✏️ Anmerkungen</mat-card-title>
+            <mat-card-content>
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Anmerkungen</mat-label>
+                <textarea matInput formControlName="anmerkungen" rows="5"></textarea>
+              </mat-form-field>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Submit -->
+          <div class="submit-container">
+            @if (!askedRemoveDog()) {
+              <button mat-raised-button color="primary" (click)="askedRemoveDog.set(true)">Hund entfernen</button>
+            } @else {
+              <span>Hund wirklich entfernen?</span>
+              <button mat-raised-button color="primary" (click)="askedRemoveDog.set(false)">Ne.</button>
+              <button mat-raised-button color="primary" (click)="removeDog()">Ja!</button>
+            }
           </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Mit Menschen -->
-      <mat-card>
-        <mat-card-title>👩‍🦰 Mit Menschen</mat-card-title>
-        <mat-card-content>
-          <div formGroupName="mitMenschen" class="section">
-            <div class="checkbox-group">
-              <mat-checkbox formControlName="freundlich">freundlich</mat-checkbox>
-              <mat-checkbox formControlName="schnappt">schnappt</mat-checkbox>
-              <mat-checkbox formControlName="zeigtSonstigeAggressionen">zeigtSonstigeAggressionen</mat-checkbox>
-              <mat-checkbox formControlName="wirdSteif">wirdSteif</mat-checkbox>
-            </div>
-
-            <div class="field-group">
-              <label>Kommt:</label>
-              <mat-button-toggle-group formControlName="kommt">
-                <mat-button-toggle *ngFor="let opt of kommtOptions" [value]="opt">{{ opt }}</mat-button-toggle>
-                <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
-              </mat-button-toggle-group>
-            </div>
-
-            <div class="field-group">
-              <label>Anfassbarkeit:</label>
-              <mat-button-toggle-group formControlName="anfassbarkeit">
-                <mat-button-toggle *ngFor="let opt of anfassbarkeitOptions" [value]="opt">{{ opt }}</mat-button-toggle>
-                <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
-              </mat-button-toggle-group>
-            </div>
-
-            <mat-checkbox formControlName="laesstSichEinschraenken">lässt sich einschränken</mat-checkbox>
-            <mat-checkbox formControlName="laesstSichFesthalten">lässt sich festhalten</mat-checkbox>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Anmerkungen -->
-      <mat-card>
-        <mat-card-title>✏️ Anmerkungen</mat-card-title>
-        <mat-card-content>
-          <mat-form-field appearance="outline" style="width: 100%;">
-            <mat-label>Anmerkungen</mat-label>
-            <textarea matInput formControlName="anmerkungen" rows="5"></textarea>
-          </mat-form-field>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Submit -->
-      <div class="submit-container">
-        @if (!askedRemoveDog()) {
-          <button mat-raised-button color="primary" (click)="askedRemoveDog.set(true)">Hund entfernen</button>
-        } @else {
-          <span>Hund wirklich entfernen?</span>
-          <button mat-raised-button color="primary" (click)="askedRemoveDog.set(false)">Ne.</button>
-          <button mat-raised-button color="primary" (click)="removeDog()">Ja!</button>
-        }
-      </div>
-    </form>
-  } @else {
-    <div class="no-selection">Kein Hund selektiert</div>
-  }
-</div>
+        </form>
+      } @else {
+        <div class="no-selection">Kein Hund selektiert</div>
+      }
+    </div>
