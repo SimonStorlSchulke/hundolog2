@@ -35,6 +35,7 @@ export class StrapiService {
           dog.id = d.id;
           const dogObj = Object.assign(new Dog(), dog);
           dogObj.mitHunden.wirdGemobbt ??= false;
+          dogObj.mitHunden.jagdTrieb ??= false;
           return dogObj;
         })));
   }

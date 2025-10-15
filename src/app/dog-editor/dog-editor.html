@@ -175,6 +175,7 @@
                 <mat-checkbox formControlName="verkriechtSich">verkriecht sich</mat-checkbox>
                 <mat-checkbox formControlName="wirdBegruesst">wird begrüßt</mat-checkbox>
                 <mat-checkbox formControlName="wirdGemobbt">wird gemobbt</mat-checkbox>
+                <mat-checkbox formControlName="jagdTrieb">Jagdtrieb</mat-checkbox>
 
                 <div class="slider">
                   <label for="bewegungsfreiheit">Bewegungsfreiheit</label>
@@ -216,12 +217,17 @@
 
                 <div class="field-group">
                   <label>Anfassbarkeit:</label>
-                  <mat-button-toggle-group formControlName="anfassbarkeit">
-                    @for (opt of anfassbarkeitOptions; track opt) {
-                      <mat-button-toggle [value]="opt">{{ opt }}</mat-button-toggle>
-                    }
-                    <mat-button-toggle class="toggle-reset" [value]="null">x</mat-button-toggle>
-                  </mat-button-toggle-group>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Anfassbarkeit</mat-label>
+                    <mat-select formControlName="anfassbarkeit">
+                      @for (opt of anfassbarkeitOptions; track $index) {
+                        <mat-option [value]="opt">
+                          {{ opt }}
+                        </mat-option>
+                      }
+                      <mat-option [value]="null">x</mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
 
                 <mat-checkbox formControlName="laesstSichEinschraenken">lässt sich einschränken</mat-checkbox>

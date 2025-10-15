@@ -51,6 +51,7 @@ export class Dog {
     verkriechtSich: boolean,
     wirdBegruesst: boolean,
     wirdGemobbt: boolean,
+    jagdTrieb: boolean,
     bewegungsfreiheit: number,
   } = {
     spielt: false,
@@ -60,6 +61,7 @@ export class Dog {
     verkriechtSich: false,
     wirdBegruesst: false,
     wirdGemobbt: false,
+    jagdTrieb: false,
     bewegungsfreiheit: NaN,
   };
 
@@ -69,7 +71,7 @@ export class Dog {
     zeigtSonstigeAggressionen: boolean,
     wirdSteif: boolean,
     kommt: "sofort" | "zögerlich" | "hält Abstand" | null,
-    anfassbarkeit: "überall" | "teilweise" | "zeigt Abwehrverhalten" | null,
+    anfassbarkeit: "überall" | "teilweise" | "zeigt Abwehrverhalten" | "nur an der Nase/ nur minimal" | null,
     laesstSichEinschraenken: boolean,
     laesstSichFesthalten: boolean,
   } = {
@@ -112,6 +114,7 @@ ${br}
 - [${dog.mitHunden.verkriechtSich ? 'x' : ' '}] verkriecht sich${br}
 - [${dog.mitHunden.wirdBegruesst ? 'x' : ' '}] wird begrüßt${br}
 - [${dog.mitHunden.wirdGemobbt ? 'x' : ' '}] wird gemobbt${br}
+- [${dog.mitHunden.jagdTrieb ? 'x' : ' '}] Jagdtrieb${br}
 Bewegungsfreiheit: ${bewFr}${br}
 ${br}
 **Mit Menschen**${br}

@@ -9,6 +9,7 @@ import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/fo
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounce, firstValueFrom, interval, Subscription } from 'rxjs';
 import { Dog, dogsToText } from 'src/app/dog';
@@ -35,8 +36,10 @@ import { StrapiService } from 'src/app/strapi.service';
     MatFabButton,
     MatMenuTrigger,
     MatMenu,
-    MatMenuItem
-],
+    MatMenuItem,
+    MatSelect,
+    MatOption
+  ],
   templateUrl: './dog-editor.html',
   styleUrl: './dog-editor.scss'
 })
@@ -51,6 +54,7 @@ export class DogEditor implements OnInit {
   anfassbarkeitOptions = [
     "überall",
     "teilweise",
+    "nur an der Nase/ nur minimal",
     "zeigt Abwehrverhalten",
   ];
   searchFormControl: FormControl = new FormControl('');
@@ -108,6 +112,7 @@ export class DogEditor implements OnInit {
         verkriechtSich: [false],
         wirdBegruesst: [false],
         wirdGemobbt: [false],
+        jagdTrieb: [false],
         bewegungsfreiheit: [NaN],
       }),
       mitMenschen: this.fb.group({
