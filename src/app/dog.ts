@@ -50,6 +50,7 @@ export class Dog {
     mobbtAndere: boolean,
     verkriechtSich: boolean,
     wirdBegruesst: boolean,
+    wirdGemobbt: boolean,
     bewegungsfreiheit: number,
   } = {
     spielt: false,
@@ -58,6 +59,7 @@ export class Dog {
     mobbtAndere: false,
     verkriechtSich: false,
     wirdBegruesst: false,
+    wirdGemobbt: false,
     bewegungsfreiheit: NaN,
   };
 
@@ -109,6 +111,7 @@ ${br}
 - [${dog.mitHunden.mobbtAndere ? 'x' : ' '}] mobbt andere${br}
 - [${dog.mitHunden.verkriechtSich ? 'x' : ' '}] verkriecht sich${br}
 - [${dog.mitHunden.wirdBegruesst ? 'x' : ' '}] wird begrüßt${br}
+- [${dog.mitHunden.wirdGemobbt ? 'x' : ' '}] wird gemobbt${br}
 Bewegungsfreiheit: ${bewFr}${br}
 ${br}
 **Mit Menschen**${br}

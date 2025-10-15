@@ -33,7 +33,9 @@ export class StrapiService {
         (r) => r.data.map((d) => {
           const dog = d.attributes.data;
           dog.id = d.id;
-          return Object.assign(new Dog(), dog);
+          const dogObj = Object.assign(new Dog(), dog);
+          dogObj.mitHunden.wirdGemobbt ??= false;
+          return dogObj;
         })));
   }
 

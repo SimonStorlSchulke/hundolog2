@@ -107,6 +107,7 @@ export class DogEditor implements OnInit {
         mobbtAndere: [false],
         verkriechtSich: [false],
         wirdBegruesst: [false],
+        wirdGemobbt: [false],
         bewegungsfreiheit: [NaN],
       }),
       mitMenschen: this.fb.group({

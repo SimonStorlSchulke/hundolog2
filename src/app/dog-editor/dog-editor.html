@@ -36,7 +36,6 @@
 
     <div class="list-entries">
       @for (dog of dogs(); track $index) {
-        @let geschlecht = dog.geschlecht ? (dog.geschlecht == 'Rüde' ? ' ♂' : ' ♀') : "";
         <div class="list-entry" [class.hidden]="!shownDogs().includes(dog)" [class.selected]="selectedDog() == $index" (click)="selectDog($index)">
           <span class="name-with-gender">{{ dog.name || 'neuer Hund' }}
             @if (dog.geschlecht) {
@@ -175,6 +174,7 @@
                 <mat-checkbox formControlName="mobbtAndere">mobbt andere</mat-checkbox>
                 <mat-checkbox formControlName="verkriechtSich">verkriecht sich</mat-checkbox>
                 <mat-checkbox formControlName="wirdBegruesst">wird begrüßt</mat-checkbox>
+                <mat-checkbox formControlName="wirdGemobbt">wird gemobbt</mat-checkbox>
 
                 <div class="slider">
                   <label for="bewegungsfreiheit">Bewegungsfreiheit</label>
