@@ -52,6 +52,7 @@ export class DogEditor implements OnInit {
   verhaltenOptions = ["wach/klar", "zurückgezogen/kränklich/matt"];
   kommtOptions = ["sofort", "zögerlich", "hält Abstand"];
   anfassbarkeitOptions = [
+    "gar nicht",
     "überall",
     "teilweise",
     "nur an der Nase/ nur minimal",
@@ -125,7 +126,6 @@ export class DogEditor implements OnInit {
         anfassbarkeit: [null],
         laesstSichEinschraenken: [false],
         laesstSichFesthalten: [false],
-        laesstSichNichtAnfassen: [false],
         skeptisch: [false],
       }),
       completeness: [0],

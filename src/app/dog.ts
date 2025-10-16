@@ -72,10 +72,9 @@ export class Dog {
     zeigtSonstigeAggressionen: boolean,
     wirdSteif: boolean,
     kommt: "sofort" | "zögerlich" | "hält Abstand" | null,
-    anfassbarkeit: "überall" | "teilweise" | "zeigt Abwehrverhalten" | "nur an der Nase/ nur minimal" | null,
+    anfassbarkeit: "gar nicht" | "überall" | "teilweise" | "zeigt Abwehrverhalten" | "nur an der Nase/ nur minimal" | null,
     laesstSichEinschraenken: boolean,
     laesstSichFesthalten: boolean,
-    laesstSichNichtAnfassen: boolean,
     skeptisch: boolean,
   } = {
     freundlich: false,
@@ -86,7 +85,6 @@ export class Dog {
     anfassbarkeit: null,
     laesstSichEinschraenken: false,
     laesstSichFesthalten: false,
-    laesstSichNichtAnfassen: false,
     skeptisch: false,
   };
   completeness = 0;
@@ -132,7 +130,6 @@ kommt: ${dog.mitMenschen.kommt || '-'}${br}
 Anfassbarkeit: ${dog.mitMenschen.anfassbarkeit || '-'}${br}
 - [${dog.mitMenschen.laesstSichEinschraenken ? 'x' : ' '}] lässt sich einschränken${br}
 - [${dog.mitMenschen.laesstSichFesthalten ? 'x' : ' '}] lässt sich festhalten${br}
-- [${dog.mitMenschen.laesstSichNichtAnfassen ? 'x' : ' '}] lässt sich nicht anfassen${br}
 - [${dog.mitMenschen.skeptisch ? 'x' : ' '}] skeptisch${br}
 ${br}
 **Anmerkungen**${br}
