@@ -30,6 +30,7 @@ export class Dog {
   geschlecht: "Rüde" | "Hündin" | null = null;
   foto: boolean = false;
   video: boolean = false;
+  belltViel: boolean = false;
 
   gesundheit: {
     bewegung: "gut" | "läuft/sitzt komisch" | null,
@@ -74,6 +75,8 @@ export class Dog {
     anfassbarkeit: "überall" | "teilweise" | "zeigt Abwehrverhalten" | "nur an der Nase/ nur minimal" | null,
     laesstSichEinschraenken: boolean,
     laesstSichFesthalten: boolean,
+    laesstSichNichtAnfassen: boolean,
+    skeptisch: boolean,
   } = {
     freundlich: false,
     schnappt: false,
@@ -83,6 +86,8 @@ export class Dog {
     anfassbarkeit: null,
     laesstSichEinschraenken: false,
     laesstSichFesthalten: false,
+    laesstSichNichtAnfassen: false,
+    skeptisch: false,
   };
   completeness = 0;
 }
@@ -105,6 +110,7 @@ Bewegung: ${dog.gesundheit.bewegung || '-'}${br}
 Gewicht: ${dog.gesundheit.gewicht || '-'}${br}
 Verhalten: ${dog.gesundheit.verhalten || '-'}${br}
 Schwierigkeit: ${schwierigkeit}${br}
+[${dog.belltViel ? 'x' : ' '}] Bellt viel${br}
 ${br}
 **Mit Hunden:**${br}
 - [${dog.mitHunden.spielt ? 'x' : ' '}] spielt${br}
@@ -126,6 +132,8 @@ kommt: ${dog.mitMenschen.kommt || '-'}${br}
 Anfassbarkeit: ${dog.mitMenschen.anfassbarkeit || '-'}${br}
 - [${dog.mitMenschen.laesstSichEinschraenken ? 'x' : ' '}] lässt sich einschränken${br}
 - [${dog.mitMenschen.laesstSichFesthalten ? 'x' : ' '}] lässt sich festhalten${br}
+- [${dog.mitMenschen.laesstSichNichtAnfassen ? 'x' : ' '}] lässt sich nicht anfassen${br}
+- [${dog.mitMenschen.skeptisch ? 'x' : ' '}] skeptisch${br}
 ${br}
 **Anmerkungen**${br}
 ${dog.anmerkungen || 'keine'}${br}

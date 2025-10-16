@@ -36,6 +36,9 @@ export class StrapiService {
           const dogObj = Object.assign(new Dog(), dog);
           dogObj.mitHunden.wirdGemobbt ??= false;
           dogObj.mitHunden.jagdTrieb ??= false;
+          dogObj.mitMenschen.laesstSichNichtAnfassen ??= false;
+          dogObj.mitMenschen.skeptisch ??= false;
+          dogObj.belltViel ??= false;
           return dogObj;
         })));
   }

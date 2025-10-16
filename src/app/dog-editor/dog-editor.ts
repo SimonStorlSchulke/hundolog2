@@ -98,6 +98,7 @@ export class DogEditor implements OnInit {
       schwierigkeit: [NaN],
       groesseCm: [NaN],
       geschlecht: [null],
+      belltViel: [false],
       gesundheit: this.fb.group({
         bewegung: [null],
         gewicht: [null],
@@ -124,6 +125,8 @@ export class DogEditor implements OnInit {
         anfassbarkeit: [null],
         laesstSichEinschraenken: [false],
         laesstSichFesthalten: [false],
+        laesstSichNichtAnfassen: [false],
+        skeptisch: [false],
       }),
       completeness: [0],
     });
