@@ -1,5 +1,5 @@
 
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
@@ -64,6 +64,7 @@ export class DogEditor implements OnInit {
   searchText = signal('');
   askedRemoveDog = signal(false);
   searchedGender = signal<"Rüde" | "Hündin" | "mf">("mf");
+  sortBy = signal<"aktualisiert-a" | "aktualisiert-d" | "alphabetisch">("alphabetisch");
 
   shownDogs = computed(() => {
     return this.dogs().filter(dog => {
@@ -72,6 +73,32 @@ export class DogEditor implements OnInit {
       return dog.name.toLowerCase().includes(this.searchText().toLowerCase())
     });
   });
+
+  sortedDogs = computed(() => {
+    const dogs = this.dogs();
+    dogs.sort((a, b) => {
+
+
+      if(this.sortBy() == 'alphabetisch') {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      } else {
+        const dir = this.sortBy() == "aktualisiert-d" ? -1 : 1;
+        if (a.aktualisiert) {
+          return -1 * dir;
+        } else {
+          return 1 * dir;
+        }
+      }
+
+    });
+    return dogs;
+  })
 
   private reloadSubscription?: Subscription;
 
@@ -87,6 +114,11 @@ export class DogEditor implements OnInit {
     if (!document.hidden) {
       this.startReloadInterval();
     }
+
+    effect(() => {
+      this.sortBy();
+      this.selectedDog.set(-1)
+    });
   }
 
   ngOnInit(): void {

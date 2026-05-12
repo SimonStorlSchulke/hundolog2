@@ -307,3 +307,12 @@ mat-card-title {
     opacity: 100%;
   }
 }
+
+.aktualisiert {
+  opacity: 0.25;
+
+  &.done {
+    opacity: 1;
+    color: #5cb339;
+  }
+}

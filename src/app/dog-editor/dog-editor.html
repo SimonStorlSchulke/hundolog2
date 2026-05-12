@@ -24,6 +24,24 @@
         }
       }
 
+      @switch (sortBy()) {
+        @case ("aktualisiert-a") {
+          <button (click)="sortBy.set('aktualisiert-d')" class="flat" matFab>
+            <mat-icon>redo</mat-icon>
+          </button>
+        }
+        @case ("aktualisiert-d") {
+          <button (click)="sortBy.set('alphabetisch')" class="flat" matFab>
+            <mat-icon>undo</mat-icon>
+          </button>
+        }
+        @case ("alphabetisch") {
+          <button (click)="sortBy.set('aktualisiert-a')" class="flat" matFab>
+            <mat-icon>sort_by_alpha</mat-icon>
+          </button>
+        }
+      }
+
       <button [matMenuTriggerFor]="menu" class="flat" matFab>
         <mat-icon>menu</mat-icon>
       </button>
@@ -34,7 +52,7 @@
     </form>
 
     <div class="list-entries">
-      @for (dog of dogs(); track $index) {
+      @for (dog of sortedDogs(); track $index) {
         <div class="list-entry" [class.hidden]="!shownDogs().includes(dog)" [class.selected]="selectedDog() == $index" (click)="selectDog($index)">
           <span class="name-with-gender">{{ dog.name || 'neuer Hund' }}
             @if (dog.geschlecht) {
@@ -42,7 +60,7 @@
             }</span>
           <mat-icon class="ic" [class.visible]="dog.foto">photo_camera</mat-icon>
           <mat-icon class="ic" [class.visible]="dog.video">videocam</mat-icon>
-          <mat-icon class="ic" [class.visible]="dog.aktualisiert">redo</mat-icon>
+          <mat-icon class="aktualisiert" [class.done]="dog.aktualisiert">redo</mat-icon>
           @let completenessPercent = ((dog.completeness ?? 0) / maxCompleteness) * 100;
           @if (completenessPercent < 100) {
             <div class="progressbar">
