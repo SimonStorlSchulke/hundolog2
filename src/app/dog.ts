@@ -22,6 +22,7 @@ export type StrapiUpdateDogRequest = {
 }
 
 export class Dog {
+  aktualisiert?: boolean = false;
   name: string = "";
   id: number = -1;
   anmerkungen: string = "";

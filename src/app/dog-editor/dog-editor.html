@@ -6,7 +6,6 @@
         <input (input)="search($event)" type="text" matInput [formControl]="searchFormControl">
       </mat-form-field>
 
-
       @switch (searchedGender()) {
         @case ("mf") {
           <button (click)="searchedGender.set('Hündin')" class="flat" matFab>
@@ -42,7 +41,8 @@
               <mat-icon>{{dog.geschlecht == 'Rüde' ? 'male' : 'female'}}</mat-icon>
             }</span>
           <mat-icon class="ic" [class.visible]="dog.foto">photo_camera</mat-icon>
-            <mat-icon class="ic" [class.visible]="dog.video">videocam</mat-icon>
+          <mat-icon class="ic" [class.visible]="dog.video">videocam</mat-icon>
+          <mat-icon class="ic" [class.visible]="dog.aktualisiert">redo</mat-icon>
           @let completenessPercent = ((dog.completeness ?? 0) / maxCompleteness) * 100;
           @if (completenessPercent < 100) {
             <div class="progressbar">
@@ -82,8 +82,10 @@
       <mat-card>
         <mat-card-title>🐶 Allgemeines - {{ dogs()[selectedDog()].name }}</mat-card-title>
         <mat-card-content>
+          <mat-checkbox formControlName="aktualisiert">aktualisiert</mat-checkbox>
 
           <div class="row">
+
             <mat-form-field appearance="outline">
               <mat-label>Name</mat-label>
               <input matInput formControlName="name"/>

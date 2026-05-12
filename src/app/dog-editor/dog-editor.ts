@@ -93,6 +93,7 @@ export class DogEditor implements OnInit {
       this.dogForm = this.fb.group({
       name: [''],
       id: [-1],
+      aktualisiert: [false],
       foto: [false],
       video: [false],
       anmerkungen: [''],
@@ -297,5 +298,9 @@ export class DogEditor implements OnInit {
     } catch (error) {
       console.error("Error downloading JSON:", error);
     }
+  }
+
+  protected resetAll() {
+
   }
 }
